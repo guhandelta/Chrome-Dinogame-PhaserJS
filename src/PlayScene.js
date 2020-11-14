@@ -28,6 +28,8 @@ class PlayScene extends Phaser.Scene {
   handleInputs(){
 
     this.input.keyboard.on('keydown_SPACE', ()=>{
+      // Don't set any VelocityY, if the dino is not on the floor
+      if(!this.dino.body.onFloor()) { return ; }
       // How fast should the dino image land back on the ground
       this.dino.setVelocityY(-1600);
     })
