@@ -21,8 +21,36 @@ class PlayScene extends Phaser.Scene {
       // Sets whether this Body collides with the world boundary(ground)
       .setCollideWorldBounds(true)
       .setGravityY(5000);
+    // fn() to initialize animations
+    this.initAnims();
     // fn() to sense the spaceKey input
     this.handleInputs();
+  }
+
+  initAnims(){
+    this.anims.create({ //Provide a configuration object for the animation
+      key: 'dino-run', // To identify the animation with a key
+      frames: this.anims.generateFrameNumbers('dino', { start: 2, end: 3 }), // defines set of frames-
+      //- within which the animation exists
+      frameRate: 10, //Repeating 10 times per second
+      repeat: -1 // -1 => will put the repeat in a loop
+    }) 
+
+    this.anims.create({ //Provide a configuration object for the animation
+      key: 'dino-down-aim', // To identify the animation with a key
+      frames: this.anims.generateFrameNumbers('dino-down', { start: 0, end: 1 }), // defines set of frames-
+      //- within which the animation exists
+      frameRate: 10, //Repeating 10 times per second
+      repeat: -1 // -1 => will put the repeat in a loop
+    }) 
+
+    this.anims.create({ //Provide a configuration object for the animation
+      key: 'enemy-dino-fly', // To identify the animation with a key
+      frames: this.anims.generateFrameNumbers('enemy-bird', { start: 0, end: 1 }), // defines set of frames-
+      //- within which the animation exists
+      frameRate: 6, //Repeating 10 times per second
+      repeat: -1 // -1 => will put the repeat in a loop
+    }) 
   }
 
   handleInputs(){
