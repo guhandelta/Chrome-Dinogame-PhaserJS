@@ -68,6 +68,14 @@ class PlayScene extends Phaser.Scene {
 
     // In every call of the update(), access the ground and update the new location of the image
     this.ground.tilePositionX += this.gameSpeed;
+
+    // Checking if the dino is in the air, by checking to see if it has a velocityY
+    if(this.dino.body.deltaAbsY() > 0){
+      this.dino.anims.stop(); // Stop all the other animations
+      this.dino.setTexture('dino'); // This will assign the image where it is not moving
+    }else{ // When dino is running
+      this.dino.play('dino-run', true); //true- will ignore the fn call, if it is already running
+    }
   }
 }
 
