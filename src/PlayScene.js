@@ -16,7 +16,21 @@ class PlayScene extends Phaser.Scene {
     this.ground = this.add.tileSprite(0, height, width, 26, 'ground').setOrigin(0, 1);
     // An Arcade Physics Sprite is a Sprite with an Arcade Physics body and related components.  
     //- The body can be dynamic or static | unlike Arcade Image, Arcade sprite may be animated
-    this.dino = this.physics.add.sprite(0, height, 'dino-idle').setOrigin(0, 1);
+    this.dino = this.physics.add.sprite(0, height, 'dino-idle')
+      .setOrigin(0, 1)
+      // Sets whether this Body collides with the world boundary(ground)
+      .setCollideWorldBounds(true)
+      .setGravityY(5000);
+    // fn() to sense the spaceKey input
+    this.handleInputs();
+  }
+
+  handleInputs(){
+
+    this.input.keyboard.on('keydown_SPACE', ()=>{
+      // How fast should the dino image land back on the ground
+      this.dino.setVelocityY(-1600);
+    })
   }
 
   // update() is called 60 times/sec => 60FPS
