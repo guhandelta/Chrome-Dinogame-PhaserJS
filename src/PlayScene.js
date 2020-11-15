@@ -11,6 +11,7 @@ class PlayScene extends Phaser.Scene {
     // Receive the Height and Width from this.game.config
     const { height, width } = this.game.config;
 
+    this.startTrigger = this.physics.add.sprite(0,10).setOrigin(0,1).setImmovable();
     // Adding the ground using tileSprite(x, y, width, height, imageFileToDisplay), which- 
     //- can be scrolled infinitely
     this.ground = this.add.tileSprite(0, height, width, 26, 'ground').setOrigin(0, 1);
@@ -25,6 +26,21 @@ class PlayScene extends Phaser.Scene {
     this.initAnims();
     // fn() to sense the spaceKey input
     this.handleInputs();
+    // fn() to add overlap between the box and dino
+    this.initStartTrigger();
+  }
+
+  initStartTrigger(){
+    const { height, width } = this.game.config;
+    this.physics.add.overlap(this.startTrigger, this.dino, () => {
+      // Checking if the box is up
+      if(this.startTrigger.y === 10){ // y=10 was set in startTrigger() defn
+        this.startTrigger.body.reset(0, height); // Move the box to the bottom part of the window
+        return;
+      }
+      // 
+      this.startTrigger.disableBody(true, true)
+    }, null, this)
   }
 
   initAnims(){
