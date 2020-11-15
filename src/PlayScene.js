@@ -7,6 +7,7 @@ class PlayScene extends Phaser.Scene {
   }
 
   create() {
+    this.isGameRunning = false;
     this.gameSpeed = 10;
     // Receive the Height and Width from this.game.config
     const { height, width } = this.game.config;
@@ -14,7 +15,7 @@ class PlayScene extends Phaser.Scene {
     this.startTrigger = this.physics.add.sprite(0,10).setOrigin(0,1).setImmovable();
     // Adding the ground using tileSprite(x, y, width, height, imageFileToDisplay), which- 
     //- can be scrolled infinitely
-    this.ground = this.add.tileSprite(0, height, width, 26, 'ground').setOrigin(0, 1);
+    this.ground = this.add.tileSprite(0, height, 88, 26, 'ground').setOrigin(0, 1);
     // An Arcade Physics Sprite is a Sprite with an Arcade Physics body and related components.  
     //- The body can be dynamic or static | unlike Arcade Image, Arcade sprite may be animated
     this.dino = this.physics.add.sprite(0, height, 'dino-idle')
@@ -39,7 +40,29 @@ class PlayScene extends Phaser.Scene {
         return;
       }
       // 
-      this.startTrigger.disableBody(true, true)
+      this.startTrigger.disableBody(true, true);
+
+      const startEvent = this.time.addEvent({
+        delay: 1000/60, // delay-> how often this fn will be called | this will be exe 60 times/sec
+        loop: true, // fn is in infinte loop
+        callbackScope: this, // callback will be this context
+        callback: () => {
+          this.dino.setVelocityX(80);
+          this.dino.play('dino-run', 1); // 1 -> Ignore if playing
+
+          if(this.ground.width < width){
+            this.ground.width += 17 * 2; // Increases width 34pc everytime the callback is exe
+          }
+
+          if(this.ground.width >= width){ // if groundWidth >= canvas => the game can be started
+            this.ground.width = width; // Verify if groundWidth === with of canvas
+            this.isGameRunning = true;
+            this.dino.setVelocity(0); // Stop dino running
+            startEvent.remove();
+          }
+        }
+      })
+
     }, null, this)
   }
 
@@ -101,7 +124,7 @@ class PlayScene extends Phaser.Scene {
 
   // update() is called 60 times/sec => 60FPS
   update() {
-
+    if(!this.isGameRunninG) { return; } // If the game is not running, don't run below code
     // In every call of the update(), access the ground and update the new location of the image
     this.ground.tilePositionX += this.gameSpeed;
 
